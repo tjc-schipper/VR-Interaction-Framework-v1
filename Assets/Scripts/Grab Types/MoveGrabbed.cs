@@ -12,7 +12,8 @@ public abstract class MoveGrabbed : MonoBehaviour {
     public virtual void Init(GrabInstance _grabInstance)
     {
         firstGrabInstance = _grabInstance;
-        grabbable = firstGrabInstance.grabbable;        
+        grabbable = firstGrabInstance.grabbable;
+        StoreProperties();
         inited = true;
     }
     public virtual void Init(GrabInstance _first, GrabInstance _second)
@@ -20,8 +21,33 @@ public abstract class MoveGrabbed : MonoBehaviour {
         firstGrabInstance = _first;
         secondGrabInstance = _second;
         grabbable = firstGrabInstance.grabbable;
+        StoreProperties();
         inited = true;
     }
+
+    void OnDestroy()
+    {
+        Debug.Log("Destroy called on base");
+        RestoreProperties();
+    }
+
+    #region Store previous properties
+    protected bool usedGravity;
+    protected bool wasKinematic;
+
+    protected void StoreProperties()
+    {
+        wasKinematic = grabbable.rb.isKinematic;
+        usedGravity = grabbable.rb.useGravity;
+    }
+
+    protected void RestoreProperties()
+    {
+        grabbable.rb.isKinematic = wasKinematic;
+        grabbable.rb.useGravity = usedGravity;
+    }
+
+    #endregion
 
     public abstract void DoMove();
 }
