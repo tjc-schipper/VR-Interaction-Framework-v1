@@ -27,7 +27,6 @@ public abstract class MoveGrabbed : MonoBehaviour {
 
     void OnDestroy()
     {
-        Debug.Log("Destroy called on base");
         RestoreProperties();
     }
 

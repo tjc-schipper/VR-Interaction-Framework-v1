@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MoveGrabbedSingleHand : MoveGrabbed {
+public class MoveGrabbedSingleHand : MoveGrabbed
+{
 
     public override void Init(GrabInstance _first, GrabInstance _second)
     {
@@ -19,13 +20,16 @@ public class MoveGrabbedSingleHand : MoveGrabbed {
     public override void DoMove()
     {
         if (!inited) return;
-        //TODO: Simply align position and rotation so that the actionPoint of the grabber aligns with the actionPoint on the grabInstance;
-        grabbable.rb.MovePosition(firstGrabInstance.grabber.actionPoint.position);
+
+        grabbable.rb.MoveRotation(firstGrabInstance.grabber.actionPoint.rotation * firstGrabInstance.grabRotationOffset);
+        grabbable.rb.MovePosition(firstGrabInstance.grabber.actionPoint.position - firstGrabInstance.grabOffset);
+
+        //TODO: What happens when two controllers grab it?
+        //TODO: Set desired position/rotation as above, lerp the rb there (or use addvelocity) for feeling of weight
     }
 
     void OnDestroy()
     {
-        Debug.Log("Destroy called on single");        
         RestoreProperties();
     }
 }

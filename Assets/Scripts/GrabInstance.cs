@@ -13,9 +13,18 @@ public class GrabInstance : MonoBehaviour
     public Grabber grabber;
     public GrabZone grabZone;
 
+    private Transform attachPoint;
+
     bool inited = false;
 
-    public Vector3 actionPoint;
+    public Vector3 grabOffset
+    {
+        get
+        {
+            return (attachPoint.position - grabbable.rb.position);
+        }
+    }
+    public Quaternion grabRotationOffset;   // The rotation of the grab relative to grabbable.rb.rotation
     public const float BREAK_DISTANCE = 0.25f;
 
     void Start()
@@ -28,9 +37,14 @@ public class GrabInstance : MonoBehaviour
         this.grabbable = grabbable;
         this.grabber = grabber;
         this.grabZone = grabZone;
+
+        this.attachPoint = new GameObject("_attachpoint").transform;
+        attachPoint.transform.position = this.grabber.actionPoint.position;
+        attachPoint.transform.parent = grabbable.transform;
         
         // Set the location of the grab initiation relative to the grabbable rigidbody position
-        this.actionPoint = grabber.actionPoint.position - grabbable.rb.position;
+        this.grabRotationOffset = Quaternion.Inverse(grabber.actionPoint.rotation) * grabbable.rb.rotation;
+        //http://answers.unity3d.com/questions/35541/problem-finding-relative-rotation-from-one-quatern.html
 
         inited = true;
     }
@@ -38,11 +52,17 @@ public class GrabInstance : MonoBehaviour
     void OnDestroy()
     {
         Debug.Log("Instance says: Destroyed!");
+        Destroy(attachPoint.gameObject);
         if (OnDestroyInstance != null) OnDestroyInstance(this, System.EventArgs.Empty);
     }
 
     void GrabButtonReleased(object sender, System.EventArgs e)
     {
         if (OnGrabButtonReleased != null) OnGrabButtonReleased(this, System.EventArgs.Empty);
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(grabber.actionPoint.position, grabber.actionPoint.position + grabber.actionPoint.forward);
     }
 }
