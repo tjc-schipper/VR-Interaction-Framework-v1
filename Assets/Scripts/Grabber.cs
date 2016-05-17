@@ -51,7 +51,7 @@ public class Grabber : MonoBehaviour
         }
     }
 
-    void OnTriggerLeave(Collider collider)
+    void OnTriggerExit(Collider collider)
     {
         GrabZone gz = collider.GetComponent<GrabZone>();
         if (gz != null)
@@ -65,7 +65,6 @@ public class Grabber : MonoBehaviour
         // Nothing grabbed yet
         if (currentGrabInstance == null)
         {
-
             // Touching something grabbable
             if (intersecting.Count > 0)
             {
@@ -92,6 +91,7 @@ public class Grabber : MonoBehaviour
 
         if (currentGrabInstance.Equals(gi))
         {
+            Debug.Log("Grabber reset currentGrabInstance");
             currentGrabInstance = null;
         }
     }
