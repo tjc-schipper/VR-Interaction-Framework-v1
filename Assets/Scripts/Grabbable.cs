@@ -28,10 +28,13 @@ public class Grabbable : MonoBehaviour
 
     public GrabInstance Grab(Grabber grabber, GrabZone grabZone)
     {
+        Debug.Log("Grab called");
         GrabInstance gi = grabZone.gameObject.AddComponent<GrabInstance>();
         gi.Init(this, grabber, grabZone);
         gi.OnGrabButtonReleased += Instance_GrabButtonReleased;
         grabInstances.Add(gi);
+        Debug.Log("Grab succesful");
+        SetMoveGrabbed();
         return gi;
     }
 
@@ -57,6 +60,7 @@ public class Grabbable : MonoBehaviour
             // Do simple grab
             Destroy(moveGrabbed);
             moveGrabbed = gameObject.AddComponent<MoveGrabbedSingleHand>();
+            moveGrabbed.Init(grabInstances[0]);
         }
         else if (grabInstances.Count == 2)
         {
@@ -78,6 +82,8 @@ public class Grabbable : MonoBehaviour
         // Remove from bookkeeping and destroy
         grabInstances.Remove(grabInstance);
         Destroy(grabInstance);
+
+        SetMoveGrabbed();
     }
     void DestroyGrabInstance(Grabber grabber)
     {
