@@ -15,7 +15,6 @@ public class MoveGrabbedSingleHand : MoveGrabbed
         base.Init(_grabInstance);
         grabbable.rb.useGravity = false;
         grabbable.rb.isKinematic = true;
-        Debug.Log("SingleHand inited!");
     }
 
     public override void DoMove()

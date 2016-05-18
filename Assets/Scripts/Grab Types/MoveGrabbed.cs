@@ -15,11 +15,10 @@ public abstract class MoveGrabbed : MonoBehaviour {
     protected Quaternion desiredRotation;
     protected Vector3 desiredPosition;
     protected float handPower = 1f;
-    public bool useWeight = false;
     protected float lerpFactor 
     {
         get {
-            if (!useWeight) return 1f;
+            if (!grabbable.useWeight) return 1f;
             else return Mathf.Clamp01(
                 handPower * ((secondGrabInstance == null) ? 1f : 2f)
                 / grabbable.rb.mass
@@ -50,7 +49,6 @@ public abstract class MoveGrabbed : MonoBehaviour {
 
     void OnDestroy()
     {
-        Debug.Log("MoveGrabbed destroyed, Restoring properties");
         RestoreProperties();
     }
 

@@ -9,6 +9,7 @@ public class Grabbable : MonoBehaviour
     public Rigidbody rb;
     public bool allowMultipleGrabs = true;
     public bool isTool = false;
+    public bool useWeight = false;
 
     MoveGrabbed moveGrabbed;
 

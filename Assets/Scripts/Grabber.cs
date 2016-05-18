@@ -7,9 +7,12 @@ public class Grabber : MonoBehaviour
     public delegate void GrabberButtonEvent(object sender, System.EventArgs e);
     public event GrabberButtonEvent GrabButtonDown;
     public event GrabberButtonEvent GrabButtonUp;
-    
+    public delegate void GrabberColliderEvent(object sender, GrabZone gz);
+    public event GrabberColliderEvent GrabbableTouchStarted;
+    public event GrabberColliderEvent GrabbableTouchEnded;
+
     SteamVR_Controller.Device device;
-    List<GrabZone> intersecting;
+    public List<GrabZone> intersecting;
     GrabInstance currentGrabInstance;
     Rigidbody rb;   // Is this necessary? Unused
 
@@ -48,6 +51,8 @@ public class Grabber : MonoBehaviour
         if (gz != null)
         {
             intersecting.Add(gz);
+            // Events
+            if (GrabbableTouchStarted != null) GrabbableTouchStarted(this, gz);
         }
     }
 
@@ -57,6 +62,8 @@ public class Grabber : MonoBehaviour
         if (gz != null)
         {
             intersecting.Remove(gz);
+            // Events
+            if (GrabbableTouchEnded != null) GrabbableTouchEnded(this, gz);
         }
     }
 

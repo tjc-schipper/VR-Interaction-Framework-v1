@@ -36,7 +36,6 @@ public class MoveGrabbedDualHand : MoveGrabbed {
         base.Init(_first, _second);
         grabbable.rb.useGravity = false;
         grabbable.rb.isKinematic = true;
-        Debug.Log("DualHand inited!");
     }
     
     public override void DoMove()
