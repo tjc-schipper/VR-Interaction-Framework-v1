@@ -11,7 +11,7 @@ public class Grabber : MonoBehaviour
     SteamVR_Controller.Device device;
     List<GrabZone> intersecting;
     GrabInstance currentGrabInstance;
-    Rigidbody rb;
+    Rigidbody rb;   // Is this necessary? Unused
 
     public Transform actionPoint;
 
@@ -91,7 +91,6 @@ public class Grabber : MonoBehaviour
 
         if (currentGrabInstance.Equals(gi))
         {
-            Debug.Log("Grabber reset currentGrabInstance");
             currentGrabInstance = null;
         }
     }

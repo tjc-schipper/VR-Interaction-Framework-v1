@@ -28,12 +28,10 @@ public class Grabbable : MonoBehaviour
 
     public GrabInstance Grab(Grabber grabber, GrabZone grabZone)
     {
-        Debug.Log("Grab called");
         GrabInstance gi = grabZone.gameObject.AddComponent<GrabInstance>();
         gi.Init(this, grabber, grabZone);
         gi.OnGrabButtonReleased += Instance_GrabButtonReleased;
         grabInstances.Add(gi);
-        Debug.Log("Grab succesful");
         SetMoveGrabbed();
         return gi;
     }
@@ -52,13 +50,13 @@ public class Grabbable : MonoBehaviour
     {
         if (grabInstances.Count == 0)
         {
-            Destroy(moveGrabbed);
+            DestroyImmediate(moveGrabbed);
             moveGrabbed = null;
         }
         else if (grabInstances.Count == 1)
         {
             // Do simple grab
-            Destroy(moveGrabbed);
+            DestroyImmediate(moveGrabbed);
             moveGrabbed = gameObject.AddComponent<MoveGrabbedSingleHand>();
             moveGrabbed.Init(grabInstances[0]);
         }
@@ -67,7 +65,7 @@ public class Grabbable : MonoBehaviour
             if (allowMultipleGrabs)
             {
                 // Do dual-hand grab
-                Destroy(moveGrabbed);
+                DestroyImmediate(moveGrabbed);
                 moveGrabbed = gameObject.AddComponent<MoveGrabbedDualHand>();
                 moveGrabbed.Init(grabInstances[0], grabInstances[1]);
             }

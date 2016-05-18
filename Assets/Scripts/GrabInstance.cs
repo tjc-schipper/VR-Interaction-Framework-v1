@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// TODO: Visualize attachpoints and their connection to the grabber somehow?
+/// Sphere that is stuck to controller, but gets stuck to Grabbable once you grab it? (And returns when you let go?)
+/// </summary>
 public class GrabInstance : MonoBehaviour
 {
-
     public delegate void GrabInstanceEvent(object sender, System.EventArgs e);
     public event GrabInstanceEvent OnDestroyInstance;
     public event GrabInstanceEvent OnGrabButtonReleased;
@@ -41,17 +44,17 @@ public class GrabInstance : MonoBehaviour
         this.attachPoint = new GameObject("_attachpoint").transform;
         attachPoint.transform.position = this.grabber.actionPoint.position;
         attachPoint.transform.parent = grabbable.transform;
-        
+
         // Set the location of the grab initiation relative to the grabbable rigidbody position
         this.grabRotationOffset = Quaternion.Inverse(grabber.actionPoint.rotation) * grabbable.rb.rotation;
-        //http://answers.unity3d.com/questions/35541/problem-finding-relative-rotation-from-one-quatern.html
+        // http://answers.unity3d.com/questions/35541/problem-finding-relative-rotation-from-one-quatern.html
+        // Need to figure out this math! Don't touch pls
 
         inited = true;
     }
 
     void OnDestroy()
     {
-        Debug.Log("Instance says: Destroyed!");
         Destroy(attachPoint.gameObject);
         if (OnDestroyInstance != null) OnDestroyInstance(this, System.EventArgs.Empty);
     }
@@ -59,10 +62,5 @@ public class GrabInstance : MonoBehaviour
     void GrabButtonReleased(object sender, System.EventArgs e)
     {
         if (OnGrabButtonReleased != null) OnGrabButtonReleased(this, System.EventArgs.Empty);
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(grabber.actionPoint.position, grabber.actionPoint.position + grabber.actionPoint.forward);
     }
 }
