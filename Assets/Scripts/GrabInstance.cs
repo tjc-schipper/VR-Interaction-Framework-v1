@@ -18,6 +18,18 @@ public class GrabInstance : MonoBehaviour
 
     private Transform attachPoint;
 
+    GrabInstanceHaptics haptics;
+
+    public readonly float MAX_STRETCH = 0.5f;  //TODO: Unused! Make instance break after max stretch is exceeded
+    public float grabStretch
+    {
+        get
+        {
+            if (inited) return (grabber.actionPoint.position - attachPoint.position).magnitude;
+            else return 0f;
+        }
+    }
+
     bool inited = false;
 
     public Vector3 grabOffset
@@ -41,20 +53,43 @@ public class GrabInstance : MonoBehaviour
         this.grabber = grabber;
         this.grabZone = grabZone;
 
-        this.attachPoint = new GameObject("_attachpoint").transform;
-        attachPoint.transform.position = this.grabber.actionPoint.position;
-        attachPoint.transform.parent = grabbable.transform;
+        CalculateOffsets(resetAttachPoint: true);
 
-        // Set the location of the grab initiation relative to the grabbable rigidbody position
-        this.grabRotationOffset = Quaternion.Inverse(grabber.actionPoint.rotation) * grabbable.rb.rotation;
-        // http://answers.unity3d.com/questions/35541/problem-finding-relative-rotation-from-one-quatern.html
-        // Need to figure out this math! Don't touch pls
+        // Add haptics component so we can feel the stretch of our grabinstances
+        haptics = gameObject.AddComponent<GrabInstanceHaptics>();
+        haptics.Init(this);
 
         inited = true;
     }
 
+    public void CalculateOffsets(bool resetAttachPoint = false)
+    {
+        if (resetAttachPoint)
+        {
+            if (attachPoint != null) Destroy(attachPoint);
+
+            // Store the location of the grab initiation relative to the grabbable rigidbody position            
+            attachPoint = new GameObject(grabber.gameObject.name + "_attachpoint").transform;
+            attachPoint.position = grabber.actionPoint.position;
+            attachPoint.parent = this.transform;
+        }
+
+        // Store the initial controller rotation relative to the grabbable rigidbody rotation
+        this.grabRotationOffset = Quaternion.Inverse(grabber.actionPoint.rotation) * grabbable.rb.rotation;
+        
+        /* http://answers.unity3d.com/questions/35541/problem-finding-relative-rotation-from-one-quatern.html
+         * Need to figure out this math! Don't touch pls
+         */
+    }
+
+    public void Uninit()
+    {
+        inited = false;
+    }
+
     void OnDestroy()
     {
+        Destroy(haptics);
         Destroy(attachPoint.gameObject);
         if (OnDestroyInstance != null) OnDestroyInstance(this, System.EventArgs.Empty);
     }

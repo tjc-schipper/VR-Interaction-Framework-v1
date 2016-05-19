@@ -10,10 +10,32 @@ public class Grabber : MonoBehaviour
     public delegate void GrabberColliderEvent(object sender, GrabZone gz);
     public event GrabberColliderEvent GrabbableTouchStarted;
     public event GrabberColliderEvent GrabbableTouchEnded;
+    public delegate void GrabInstanceEvent(object sender, GrabInstance gi);
+    public event GrabInstanceEvent GrabInstanceCreated;
+    public event GrabInstanceEvent GrabInstanceDestroyed;
 
     SteamVR_Controller.Device device;
     public List<GrabZone> intersecting;
-    GrabInstance currentGrabInstance;
+    public GrabInstance currentGrabInstance
+    {
+        get
+        {
+            return _currentGrabInstance;
+        }
+        private set
+        {
+            _currentGrabInstance = value;
+            if (_currentGrabInstance != null)
+            {
+                if (GrabInstanceCreated != null) GrabInstanceCreated(this, _currentGrabInstance);
+            }
+            else
+            {
+                if (GrabInstanceDestroyed != null) GrabInstanceDestroyed(this, null);
+            }
+        }
+    }
+    GrabInstance _currentGrabInstance;
     Rigidbody rb;   // Is this necessary? Unused
 
     public Transform actionPoint;

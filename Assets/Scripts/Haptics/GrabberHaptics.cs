@@ -14,7 +14,7 @@ public class GrabberHaptics : MonoBehaviour
     float distanceCounter;
     float distanceBetweenPulses = 0.005f;
     Vector3 lastPos;
-    
+
     // Use this for initialization
     void Start()
     {
@@ -37,7 +37,7 @@ public class GrabberHaptics : MonoBehaviour
             distanceCounter += (grabber.transform.position - lastPos).magnitude;
             if (distanceCounter > distanceBetweenPulses)
             {
-                ShortColliderPulse(STAY_PULSE);
+                DoPulse(STAY_PULSE);
                 distanceCounter = 0f;
             }
         }
@@ -47,18 +47,21 @@ public class GrabberHaptics : MonoBehaviour
 
     void grabber_ColliderLeft(object sender, GrabZone gz)
     {
-        ShortColliderPulse(ENTER_EXIT_PULSE);
+        DoPulse(ENTER_EXIT_PULSE);
     }
 
     void grabber_ColliderEntered(object sender, GrabZone gz)
     {
-        ShortColliderPulse(ENTER_EXIT_PULSE);
+        DoPulse(ENTER_EXIT_PULSE);
     }
 
-    
-    void ShortColliderPulse(int duration = 500)
+    public void DoPulse(int duration = 500)
     {
-        Debug.Log("Haptics pulse triggered: " + duration.ToString());        
         device.TriggerHapticPulse((ushort)duration);
+    }
+
+    public void DoVibration(int strength, int interval, int duration)
+    {
+        throw new System.NotImplementedException("GrabberHaptics.DoVibration() has not been implemented yet!");
     }
 }

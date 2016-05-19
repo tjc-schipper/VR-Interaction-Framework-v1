@@ -76,11 +76,18 @@ public class Grabbable : MonoBehaviour
     void DestroyGrabInstance(GrabInstance grabInstance)
     {
         // Do all the basic stuff here like unsubscribing from events
+        grabInstance.Uninit();
         grabInstance.OnGrabButtonReleased -= Instance_GrabButtonReleased;
         
         // Remove from bookkeeping and destroy
         grabInstances.Remove(grabInstance);
         Destroy(grabInstance);
+
+        // Reset grab instances if there still are any
+        foreach (GrabInstance gi in grabInstances)
+        {
+            gi.CalculateOffsets();
+        }
 
         SetMoveGrabbed();
     }

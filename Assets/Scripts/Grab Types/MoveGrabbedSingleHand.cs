@@ -15,6 +15,22 @@ public class MoveGrabbedSingleHand : MoveGrabbed
         base.Init(_grabInstance);
         grabbable.rb.useGravity = false;
         grabbable.rb.isKinematic = true;
+
+        // Ease in setup (for when coming back from two-handed grabs)
+        if (firstGrabInstance.grabStretch >= MoveGrabbed.EASE_IN_THRESHOLD)
+        {
+            easeInTimer = MoveGrabbed.EASE_IN_DURATION;
+        }
+    }
+
+    void OnDestroy()
+    {
+        // Overriding base.OnDestroy()!
+        if (easeInTimer > 0f)
+        {
+            firstGrabInstance.grabbable.rb.velocity = Vector3.zero;
+        }
+        RestoreProperties();
     }
 
     public override void DoMove()
