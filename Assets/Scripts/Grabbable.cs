@@ -29,12 +29,12 @@ public class Grabbable : MonoBehaviour
 
     public GrabInstance Grab(Grabber grabber, GrabZone grabZone)
     {
-        GrabInstance gi = grabZone.gameObject.AddComponent<GrabInstance>();
-        gi.Init(this, grabber, grabZone);
-        gi.OnGrabButtonReleased += Instance_GrabButtonReleased;
-        grabInstances.Add(gi);
-        SetMoveGrabbed();
-        return gi;
+        GrabInstance grabInstance = grabZone.gameObject.AddComponent<GrabInstance>();
+        grabInstance.Init(this, grabber, grabZone);
+        grabInstance.OnGrabButtonReleased += Instance_GrabButtonReleased;
+        grabInstances.Add(grabInstance);
+        CreateGrabHandler(grabInstance);
+        return grabInstance;
     }
 
     void Instance_GrabButtonReleased(object sender, System.EventArgs e)
@@ -47,7 +47,12 @@ public class Grabbable : MonoBehaviour
 
     }
 
-    void SetMoveGrabbed()
+    /// <summary>
+    /// Update the GrabHandler to result in the behaviour that we want. Replace singlehand with doublehand, vice versa, tool or not, snap or not, etc.
+    /// TODO: Create a GrabParameters object to pass here that uses the Grabber, the Grabbable and the GrabZone to determine what to do.
+    /// </summary>
+    /// <param name="grabInstance"></param>
+    void CreateGrabHandler(GrabInstance grabInstance)
     {
         if (grabInstances.Count == 0)
         {
@@ -58,8 +63,18 @@ public class Grabbable : MonoBehaviour
         {
             // Do simple grab
             DestroyImmediate(moveGrabbed);
-            moveGrabbed = gameObject.AddComponent<MoveGrabbedSingleHand>();
-            moveGrabbed.Init(grabInstances[0]);
+
+            if (grabInstance.grabZone.isToolGrab)
+            {
+                moveGrabbed = gameObject.AddComponent<MoveGrabbedSingleHand_Tool>();
+                moveGrabbed.Init(grabInstances[0]);
+            }
+            else
+            {
+                moveGrabbed = gameObject.AddComponent<MoveGrabbedSingleHand>();
+                moveGrabbed.Init(grabInstances[0]);
+            }
+
         }
         else if (grabInstances.Count == 2)
         {
@@ -78,7 +93,7 @@ public class Grabbable : MonoBehaviour
         // Do all the basic stuff here like unsubscribing from events
         grabInstance.Uninit();
         grabInstance.OnGrabButtonReleased -= Instance_GrabButtonReleased;
-        
+
         // Remove from bookkeeping and destroy
         grabInstances.Remove(grabInstance);
         Destroy(grabInstance);
@@ -89,7 +104,7 @@ public class Grabbable : MonoBehaviour
             gi.CalculateOffsets();
         }
 
-        SetMoveGrabbed();
+        CreateGrabHandler(grabInstance);
     }
     void DestroyGrabInstance(Grabber grabber)
     {

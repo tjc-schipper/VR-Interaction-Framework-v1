@@ -52,6 +52,7 @@ public class MoveGrabbedDualHand : MoveGrabbed
 
         // Initialize controller orientation so the update loop doesn't screw up ([0,0,0] previousOrientation).
         previousControllerOrientation = controllerOrientation;
+        inited = true;
     }
 
     public override void DoMove()
@@ -124,14 +125,16 @@ public static partial class RotationHelpers
 
     public static float GetPlaneProjectedAngleTo(this Vector3 oldDir, Vector3 newDir, Vector3 planeNormal, out Vector3 cross)
     {
+        // Project original two vectors onto a plane defined by planeNormal
         Vector3 projectedOld = Vector3.ProjectOnPlane(oldDir, planeNormal).normalized;
         Vector3 projectedNew = Vector3.ProjectOnPlane(newDir, planeNormal).normalized;
         float angle = Vector3.Angle(projectedOld, projectedNew);
         
+        // Get orthogonal to pOld and pNew, indicating angle direction using right-hand-rule.
         cross = Vector3.Cross(projectedOld, projectedNew).normalized;
-        float crossDirection = Vector3.Dot(cross, planeNormal);
         
         // Reverse angle if crossproduct faces opposite planeNormal
+        float crossDirection = Vector3.Dot(cross, planeNormal);
         if (crossDirection < 0) angle *= -1;
         return angle;
     }

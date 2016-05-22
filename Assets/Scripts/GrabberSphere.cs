@@ -12,7 +12,6 @@ public class GrabberSphere : MonoBehaviour
     static readonly float minWidth = 0.001f;
     static readonly float minStretchForLine = 0.1f;
 
-
     // Use this for initialization
     void Awake()
     {
@@ -23,14 +22,15 @@ public class GrabberSphere : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        ConfigureGrabberSphere(null);   // Reset grabbersphere to controller actionpoint
+    }
+
     void grabber_GrabInstanceDestroyed(object sender, GrabInstance gi)
     {
         if (grabInstance.Equals(gi)) grabInstance = null;
-
-        // return ball to default position
-        transform.position = grabber.actionPoint.position;
-        transform.parent = grabber.transform;
-
+        ConfigureGrabberSphere(null);
         Destroy(lineRenderer);
     }
 
@@ -38,7 +38,7 @@ public class GrabberSphere : MonoBehaviour
     {
         // Parent the ball to the grabbed object so it follows it.
         grabInstance = gi;
-        transform.parent = grabInstance.grabbable.transform;
+        ConfigureGrabberSphere(gi);
 
         // Create the linerenderer
         lineRenderer = gameObject.AddComponent<LineRenderer>();
@@ -73,7 +73,7 @@ public class GrabberSphere : MonoBehaviour
         {
             // Disable linerenderer if too close
             lineRenderer.enabled = (grabInstance.grabStretch >= minStretchForLine);
-            
+
             if (lineRenderer != null)
             {
                 lineRenderer.SetPosition(0, transform.position);
@@ -81,6 +81,23 @@ public class GrabberSphere : MonoBehaviour
                 float width = Mathf.Lerp(minWidth, maxWidth, (grabInstance.grabStretch / grabInstance.MAX_STRETCH));
                 lineRenderer.SetWidth(width, width);
             }
+        }
+    }
+
+    void ConfigureGrabberSphere(GrabInstance gi = null)
+    {
+        if (gi == null)
+        {
+            // return to center
+            transform.position = grabber.actionPoint.position;
+            transform.parent = grabber.actionPoint;
+        }
+        else
+        {
+            // parent to grabbable, set to attachPoint
+            transform.position = gi.AttachPoint;
+            transform.parent = gi.grabbable.transform;
+            // TODO: Actually set the grabber sphere to the attachpoint if the grabbable.grabZone has one? For tool snaps and such.
         }
     }
 }

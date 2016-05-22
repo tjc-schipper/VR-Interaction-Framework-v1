@@ -4,6 +4,18 @@ using System.Collections;
 public class GrabZone : MonoBehaviour {
 
     public Grabbable grabbable;
+    
+    public bool isToolGrab;
+    [SerializeField]
+    Transform alignmentPoint;
+    public Transform ActionPoint
+    {
+        get
+        {
+            if (alignmentPoint != null) return alignmentPoint;
+            else return transform;
+        }
+    }
 
     void Awake()
     {
@@ -11,7 +23,7 @@ public class GrabZone : MonoBehaviour {
         GameObject go = gameObject;
         do
         {
-            grabbable = gameObject.GetComponent<Grabbable>();
+            grabbable = go.GetComponent<Grabbable>();
         } while (grabbable == null && (go = go.transform.parent.gameObject));
 
         if (grabbable == null)

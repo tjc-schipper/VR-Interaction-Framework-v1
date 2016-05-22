@@ -21,6 +21,8 @@ public class MoveGrabbedSingleHand : MoveGrabbed
         {
             easeInTimer = MoveGrabbed.EASE_IN_DURATION;
         }
+
+        inited = true;
     }
 
     void OnDestroy()

@@ -41,7 +41,6 @@ public abstract class MoveGrabbed : MonoBehaviour {
         firstGrabInstance = _grabInstance;
         grabbable = firstGrabInstance.grabbable;
         StoreProperties();
-        inited = true;
     }
     public virtual void Init(GrabInstance _first, GrabInstance _second)
     {
@@ -49,7 +48,6 @@ public abstract class MoveGrabbed : MonoBehaviour {
         secondGrabInstance = _second;
         grabbable = firstGrabInstance.grabbable;
         StoreProperties();
-        inited = true;
     }
     #endregion
 
@@ -62,17 +60,20 @@ public abstract class MoveGrabbed : MonoBehaviour {
     {
         if (inited)
         {
-            if (easeInTimer >= 0f)
+            if (grabbable.rb.isKinematic)
             {
-                // Do ease in
-                easeInTimer -= Time.fixedDeltaTime;
-                grabbable.rb.MovePosition(Vector3.Lerp(grabbable.rb.position, desiredPosition, 1f-(easeInTimer / EASE_IN_DURATION)));
-                grabbable.rb.MoveRotation(Quaternion.Lerp(grabbable.rb.rotation, desiredRotation, 1f - (easeInTimer / EASE_IN_DURATION)));
-            }
-            else
-            {
-                grabbable.rb.MovePosition(Vector3.Lerp(grabbable.rb.position, desiredPosition, lerpFactor));
-                grabbable.rb.MoveRotation(Quaternion.Lerp(grabbable.rb.rotation, desiredRotation, lerpFactor));
+                if (easeInTimer >= 0f)
+                {
+                    // Do ease in
+                    easeInTimer -= Time.fixedDeltaTime;
+                    grabbable.rb.MovePosition(Vector3.Lerp(grabbable.rb.position, desiredPosition, 1f - (easeInTimer / EASE_IN_DURATION)));
+                    grabbable.rb.MoveRotation(Quaternion.Lerp(grabbable.rb.rotation, desiredRotation, 1f - (easeInTimer / EASE_IN_DURATION)));
+                }
+                else
+                {
+                    grabbable.rb.MovePosition(Vector3.Lerp(grabbable.rb.position, desiredPosition, lerpFactor));
+                    grabbable.rb.MoveRotation(Quaternion.Lerp(grabbable.rb.rotation, desiredRotation, lerpFactor));
+                }
             }
         }
     }

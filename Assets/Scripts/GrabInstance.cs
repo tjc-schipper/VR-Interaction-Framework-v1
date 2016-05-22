@@ -17,20 +17,37 @@ public class GrabInstance : MonoBehaviour
     public GrabZone grabZone;
 
     private Transform attachPoint;
+    public Vector3 AttachPoint
+    {
+        get
+        {
+            return attachPoint.position;
+        }
+    }
 
     GrabInstanceHaptics haptics;
+
+    public Vector3 stretch
+    {
+        get
+        {
+            if (inited) return (grabber.actionPoint.position - attachPoint.position);
+            else return Vector3.zero;
+        }
+    }
 
     public readonly float MAX_STRETCH = 0.5f;  //TODO: Unused! Make instance break after max stretch is exceeded
     public float grabStretch
     {
         get
         {
-            if (inited) return (grabber.actionPoint.position - attachPoint.position).magnitude;
-            else return 0f;
+            return stretch.magnitude;
         }
     }
 
     bool inited = false;
+
+    
 
     public Vector3 grabOffset
     {
