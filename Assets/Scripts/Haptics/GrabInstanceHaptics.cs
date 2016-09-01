@@ -33,7 +33,7 @@ public class GrabInstanceHaptics : MonoBehaviour
     void Update()
     {
         if (!inited) return;
-        strength = (int)(Mathf.Clamp01(grabInstance.grabStretch / grabInstance.MAX_STRETCH) * pulseStrength);
+        strength = (int)(Mathf.Clamp01(grabInstance.stretchDistance / grabInstance.MAX_STRETCH) * pulseStrength);
         
         updateCounter++;
         if (updateCounter >= PULSE_UPDATE_INTERVAL)

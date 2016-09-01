@@ -5,13 +5,14 @@ using System.Collections.Generic;
 public class Grabbable : MonoBehaviour
 {
 
-    List<GrabInstance> grabInstances;
+    protected List<GrabInstance> grabInstances;
     public Rigidbody rb;
     public bool allowMultipleGrabs = true;
     public bool isTool = false;
     public bool useWeight = false;
 
-    MoveGrabbed moveGrabbed;
+    protected MoveGrabbed moveGrabbed;
+    protected MovementModifier modifier;
 
     void Awake()
     {
@@ -24,6 +25,11 @@ public class Grabbable : MonoBehaviour
         if (moveGrabbed != null)
         {
             moveGrabbed.DoMove();
+
+            if (modifier != null)
+            {
+                modifier.DoModify(grabInstances, moveGrabbed);
+            }
         }
     }
 
@@ -52,7 +58,7 @@ public class Grabbable : MonoBehaviour
     /// TODO: Create a GrabParameters object to pass here that uses the Grabber, the Grabbable and the GrabZone to determine what to do.
     /// </summary>
     /// <param name="grabInstance"></param>
-    void CreateGrabHandler(GrabInstance grabInstance)
+    protected virtual void CreateGrabHandler(GrabInstance grabInstance)
     {
         if (grabInstances.Count == 0)
         {
@@ -88,7 +94,7 @@ public class Grabbable : MonoBehaviour
         }
     }
 
-    void DestroyGrabInstance(GrabInstance grabInstance)
+    public void DestroyGrabInstance(GrabInstance grabInstance)
     {
         // Do all the basic stuff here like unsubscribing from events
         grabInstance.Uninit();
@@ -101,12 +107,12 @@ public class Grabbable : MonoBehaviour
         // Reset grab instances if there still are any
         foreach (GrabInstance gi in grabInstances)
         {
-            gi.CalculateOffsets();
+            gi.CalcGrabOrientationOffset();
         }
 
         CreateGrabHandler(grabInstance);
     }
-    void DestroyGrabInstance(Grabber grabber)
+    public void DestroyGrabInstance(Grabber grabber)
     {
         GrabInstance gi = grabInstances.Find(item => item.grabber.Equals(grabber));
         if (gi != null)
@@ -114,7 +120,7 @@ public class Grabbable : MonoBehaviour
             DestroyGrabInstance(gi);
         }
     }
-    void DestroyGrabInstance(GrabZone grabZone)
+    public void DestroyGrabInstance(GrabZone grabZone)
     {
         GrabInstance gi = grabInstances.Find(item => item.grabZone.Equals(grabZone));
         if (gi != null)
@@ -122,4 +128,19 @@ public class Grabbable : MonoBehaviour
             DestroyGrabInstance(gi);
         }
     }
+
+    
+    #region Modifiers
+    public GameObject AddModifier(MovementModifier mod)
+    {
+        modifier = mod;
+        return this.gameObject;
+    }
+    public GameObject RemoveModifier(MovementModifier mod)
+    {
+        modifier = null;
+        return this.gameObject;
+    }
+
+    #endregion
 }

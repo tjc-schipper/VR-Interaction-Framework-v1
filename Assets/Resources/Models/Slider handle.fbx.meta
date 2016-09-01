@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: d9c7304ff5eb6624ab8c6e44aacf1ac7
-timeCreated: 1463596460
+guid: d44602ca0a4dcae4ab7a579316462ea2
+timeCreated: 1472656900
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,12 +9,11 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Mesh
-    6400000: //RootNode
+    4300000: Handle
     7400000: Take 001
     9500000: //RootNode
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
@@ -39,7 +38,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
+    addColliders: 0
     importBlendShapes: 0
     swapUVChannels: 0
     generateSecondaryUV: 0

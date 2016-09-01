@@ -36,8 +36,8 @@ public class GrabInstance : MonoBehaviour
         }
     }
 
-    public readonly float MAX_STRETCH = 0.5f;  //TODO: Unused! Make instance break after max stretch is exceeded
-    public float grabStretch
+    public readonly float MAX_STRETCH = 0.5f;
+    public float stretchDistance
     {
         get
         {
@@ -64,13 +64,22 @@ public class GrabInstance : MonoBehaviour
         grabber.GrabButtonUp += GrabButtonReleased;
     }
 
+    void Update()
+    {
+        if (Mathf.Abs(stretchDistance) >= MAX_STRETCH)
+        {
+            // Break the GrabInstance
+            grabbable.DestroyGrabInstance(this);
+        }
+    }
+
     public void Init(Grabbable grabbable, Grabber grabber, GrabZone grabZone)
     {
         this.grabbable = grabbable;
         this.grabber = grabber;
         this.grabZone = grabZone;
 
-        CalculateOffsets(resetAttachPoint: true);
+        CalcGrabOrientationOffset(resetAttachPoint: true);
 
         // Add haptics component so we can feel the stretch of our grabinstances
         haptics = gameObject.AddComponent<GrabInstanceHaptics>();
@@ -79,7 +88,11 @@ public class GrabInstance : MonoBehaviour
         inited = true;
     }
 
-    public void CalculateOffsets(bool resetAttachPoint = false)
+    /// <summary>
+    /// Calculate the difference between Grabbable rot and Grabber rot, to use for offset position setting
+    /// </summary>
+    /// <param name="resetAttachPoint"></param>
+    public void CalcGrabOrientationOffset(bool resetAttachPoint = false)
     {
         if (resetAttachPoint)
         {

@@ -7,6 +7,7 @@ using System.Collections;
 
 public abstract class MoveGrabbed : MonoBehaviour {
 
+    
     protected const float EASE_IN_DURATION = 0.25f;   // How long ease-in lasts
     protected const float EASE_IN_THRESHOLD = 0.1f;   // How stretched the grabInstance needs to be for easeIn to kick in
     protected float easeInTimer = 0f;
@@ -18,8 +19,8 @@ public abstract class MoveGrabbed : MonoBehaviour {
     #region Pos/Rot interpolation based on weight
     //TODO: This does not work with grabAxis rotation in dualhand grabs! The easing smooths out the small rotations each frame.
     
-    protected Quaternion desiredRotation;
-    protected Vector3 desiredPosition;
+    public Quaternion desiredRotation;
+    public Vector3 desiredPosition;
     protected float handPower = 1f;
     protected float lerpFactor 
     {
@@ -40,6 +41,10 @@ public abstract class MoveGrabbed : MonoBehaviour {
     {
         firstGrabInstance = _grabInstance;
         grabbable = firstGrabInstance.grabbable;
+        
+        desiredPosition = grabbable.rb.position;
+        desiredRotation = grabbable.rb.rotation;
+        
         StoreProperties();
     }
     public virtual void Init(GrabInstance _first, GrabInstance _second)
@@ -47,8 +52,13 @@ public abstract class MoveGrabbed : MonoBehaviour {
         firstGrabInstance = _first;
         secondGrabInstance = _second;
         grabbable = firstGrabInstance.grabbable;
+
+        desiredPosition = grabbable.rb.position;
+        desiredRotation = grabbable.rb.rotation;
+
         StoreProperties();
     }
+
     #endregion
 
     void OnDestroy()

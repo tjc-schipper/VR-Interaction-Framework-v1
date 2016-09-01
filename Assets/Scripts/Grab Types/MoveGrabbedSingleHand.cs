@@ -17,7 +17,7 @@ public class MoveGrabbedSingleHand : MoveGrabbed
         grabbable.rb.isKinematic = true;
 
         // Ease in setup (for when coming back from two-handed grabs)
-        if (firstGrabInstance.grabStretch >= MoveGrabbed.EASE_IN_THRESHOLD)
+        if (firstGrabInstance.stretchDistance >= MoveGrabbed.EASE_IN_THRESHOLD)
         {
             easeInTimer = MoveGrabbed.EASE_IN_DURATION;
         }

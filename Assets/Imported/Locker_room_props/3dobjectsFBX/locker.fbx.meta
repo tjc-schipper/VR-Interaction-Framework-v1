@@ -1,21 +1,12 @@
 fileFormatVersion: 2
-guid: d9c7304ff5eb6624ab8c6e44aacf1ac7
-timeCreated: 1463596460
-licenseType: Free
+guid: 46e2406d597f43e498322a545c329207
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
     4300000: Mesh
-    6400000: //RootNode
-    7400000: Take 001
-    9500000: //RootNode
   materials:
-    importMaterials: 0
-    materialName: 0
+    importMaterials: 1
+    materialName: 2
     materialSearch: 1
   animations:
     legacyGenerateAnimations: 4
@@ -34,13 +25,13 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     clipAnimations: []
-    isReadable: 0
+    isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 0.01
     meshCompression: 0
-    addColliders: 1
-    importBlendShapes: 0
+    addColliders: 0
+    importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
@@ -51,12 +42,12 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
-    normalSmoothAngle: 60
-    normalImportMode: 0
-    tangentImportMode: 3
-  importAnimation: 0
+    normalSmoothAngle: 32
+    normalImportMode: 1
+    tangentImportMode: 4
+  importAnimation: 1
   copyAvatar: 0
   humanDescription:
     human: []
@@ -71,7 +62,7 @@ ModelImporter:
     rootMotionBoneName: 
     hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 1
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

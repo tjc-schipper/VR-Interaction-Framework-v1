@@ -8,9 +8,14 @@ public class GrabberSphere : MonoBehaviour
     GrabInstance grabInstance;
     LineRenderer lineRenderer;
 
-    static readonly float maxWidth = 0.005f;
-    static readonly float minWidth = 0.001f;
-    static readonly float minStretchForLine = 0.1f;
+    static readonly float maxWidth = 0.01f;
+    static readonly float minWidth = 0.002f;
+    static readonly float minStretchForLine = 0.1f;     // At stretchDistance does the linerenderer appear?
+    static readonly float breakWarningPercentage = 0.8f;  // At which percentage of max_stretch does the line turn into a warning color?
+
+    static readonly Color lineColor_light = new Color(0.2f, 1f, 0f, 0.1f);
+    static readonly Color lineColor_heavy = new Color(0.2f, 1f, 0.2f, 0.5f);
+    static readonly Color lineColor_break = new Color(1f, 0, 0f, 1f);
 
     // Use this for initialization
     void Awake()
@@ -72,14 +77,30 @@ public class GrabberSphere : MonoBehaviour
         if (grabInstance != null)
         {
             // Disable linerenderer if too close
-            lineRenderer.enabled = (grabInstance.grabStretch >= minStretchForLine);
+            lineRenderer.enabled = (grabInstance.stretchDistance >= minStretchForLine);
 
             if (lineRenderer != null)
             {
+                // Update positions
                 lineRenderer.SetPosition(0, transform.position);
                 lineRenderer.SetPosition(1, grabInstance.grabber.actionPoint.position);
-                float width = Mathf.Lerp(minWidth, maxWidth, (grabInstance.grabStretch / grabInstance.MAX_STRETCH));
-                lineRenderer.SetWidth(width, width);
+
+                // Update widths
+                float startWidth = Mathf.Lerp(minWidth, maxWidth, (Mathf.Abs(grabInstance.stretchDistance / grabInstance.MAX_STRETCH)));
+                float endWidth = (startWidth / 2f) * (Mathf.Abs(grabInstance.stretchDistance / grabInstance.MAX_STRETCH));
+                lineRenderer.SetWidth(startWidth, endWidth);
+
+                // Update color
+                Color lineColor = Color.white;
+                if (grabInstance.stretchDistance > (grabInstance.MAX_STRETCH * breakWarningPercentage))
+                {
+                    lineColor = lineColor_break;
+                }
+                else
+                {
+                    lineColor = Color.Lerp(lineColor_light, lineColor_heavy, (grabInstance.stretchDistance / (grabInstance.MAX_STRETCH * breakWarningPercentage)));
+                }
+                lineRenderer.material.color = lineColor;
             }
         }
     }

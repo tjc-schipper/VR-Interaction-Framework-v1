@@ -38,6 +38,8 @@ public class Grabber : MonoBehaviour
     GrabInstance _currentGrabInstance;
     Rigidbody rb;   // Is this necessary? Unused
 
+    public float grabStrength = 1f;
+
     public Transform actionPoint;
 
     void Awake()
