@@ -13,6 +13,13 @@ public class Grabbable : MonoBehaviour
 
     protected MoveGrabbed moveGrabbed;
     protected MovementModifier modifier;
+    public bool hasModifier
+    {
+        get
+        {
+            return modifier != null;
+        }
+    }
 
     void Awake()
     {
@@ -64,7 +71,10 @@ public class Grabbable : MonoBehaviour
         {
             DestroyImmediate(moveGrabbed);
             moveGrabbed = null;
+
+            EnableSnapPreviews(false);
         }
+
         else if (grabInstances.Count == 1)
         {
             // Do simple grab
@@ -81,7 +91,9 @@ public class Grabbable : MonoBehaviour
                 moveGrabbed.Init(grabInstances[0]);
             }
 
+            EnableSnapPreviews(true);
         }
+
         else if (grabInstances.Count == 2)
         {
             if (allowMultipleGrabs)
@@ -90,6 +102,26 @@ public class Grabbable : MonoBehaviour
                 DestroyImmediate(moveGrabbed);
                 moveGrabbed = gameObject.AddComponent<MoveGrabbedDualHand>();
                 moveGrabbed.Init(grabInstances[0], grabInstances[1]);
+                EnableSnapPreviews(true);
+            }
+        }
+
+
+    }
+
+    void EnableSnapPreviews(bool enabled)
+    {
+        // Update snap locations
+        SnapPositionModifier[] snaps = GameObject.FindObjectsOfType<SnapPositionModifier>();
+        foreach (SnapPositionModifier snap in snaps)
+        {
+            if (enabled)
+            {
+                snap.SetObjectPreview(this.gameObject);
+            }
+            else
+            {
+                snap.SetObjectPreview(null);
             }
         }
     }
@@ -129,7 +161,7 @@ public class Grabbable : MonoBehaviour
         }
     }
 
-    
+
     #region Modifiers
     public GameObject AddModifier(MovementModifier mod)
     {

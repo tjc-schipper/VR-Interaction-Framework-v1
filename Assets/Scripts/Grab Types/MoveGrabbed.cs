@@ -63,7 +63,10 @@ public abstract class MoveGrabbed : MonoBehaviour {
 
     void OnDestroy()
     {
-        RestoreProperties();
+        if (!grabbable.hasModifier)
+        {
+            RestoreProperties();    // Restore properties only when a snap isn't affecting the grabbable! HACK TIME!
+        }
     }
 
     void FixedUpdate()

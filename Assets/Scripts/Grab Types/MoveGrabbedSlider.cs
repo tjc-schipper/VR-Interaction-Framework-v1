@@ -5,24 +5,7 @@ public class MoveGrabbedSlider : MoveGrabbed {
 
     GrabbableSlider gr;
 
-    Material knobMat;
-    bool _oob = false;
-    bool oob
-    {
-        get
-        {
-            return _oob;
-        }
-        set
-        {
-            if (value != _oob)
-            {
-                knobMat.color = (value) ? Color.red : Color.green;
-                _oob = value;
-            }
-        }
-    }
-
+    
     public override void Init(GrabInstance _grabInstance)
     {
         base.Init(_grabInstance);
@@ -30,8 +13,7 @@ public class MoveGrabbedSlider : MoveGrabbed {
         grabbable.rb.isKinematic = true;
 
         gr = (GrabbableSlider)grabbable;
-        knobMat = grabbable.GetComponent<MeshRenderer>().material;
-
+        
         inited = true;
     }
 
@@ -61,24 +43,19 @@ public class MoveGrabbedSlider : MoveGrabbed {
         float dragDistanceAlongAxis = Vector3.Dot(gr.axis, dragVector);
         Vector3 tempDesiredPosition = grabbable.rb.position + dragDistanceAlongAxis * gr.axis;
 
-        // Calc how far the desiredPosition is removed from the center of the slider
-        Vector3 a = tempDesiredPosition - gr.sliderBase.transform.position;
-        //float sliderDisplacement = Vector3.Dot(a, gr.axis);
-        float sliderDisplacement = Vector3.Dot(gr.axis, a);
-
+        float sliderDisplacement = gr.GetDisplacement(tempDesiredPosition);
+        
         
         // Correct tempDesiredPosition if out of bounds
-        if (Mathf.Abs(sliderDisplacement) > gr.maxDisplacement)
+        if (Mathf.Abs(sliderDisplacement) <= gr.maxDisplacement)
         {
-            // Out of bounds!
-            oob = true;
-            //tempDesiredPosition = grabbable.rb.position + (gr.axis * gr.maxDisplacement * Mathf.Sign(sliderDisplacement));
+            desiredPosition = tempDesiredPosition;
         }
         else
         {
-            oob = false;
+            desiredPosition = gr.rb.position;
         }
+        
 
-        desiredPosition = tempDesiredPosition;
     }
 }

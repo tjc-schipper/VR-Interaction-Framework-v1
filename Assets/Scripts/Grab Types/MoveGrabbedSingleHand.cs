@@ -32,7 +32,9 @@ public class MoveGrabbedSingleHand : MoveGrabbed
         {
             firstGrabInstance.grabbable.rb.velocity = Vector3.zero;
         }
-        RestoreProperties();
+        
+        if (!grabbable.hasModifier)
+            RestoreProperties();
     }
 
     public override void DoMove()

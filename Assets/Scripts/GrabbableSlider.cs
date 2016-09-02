@@ -3,14 +3,13 @@ using System.Collections;
 
 public class GrabbableSlider : Grabbable {
 
-    public float maxDisplacement = 1f;
+    public float maxDisplacement = 0.19f;
     public GameObject sliderBase;
 
     public float GetDisplacement(Vector3 position)
     {
         Vector3 offset = position - sliderBase.transform.position;
-        Vector3 projected = Vector3.Project(offset, sliderBase.transform.right);
-        return projected.magnitude;
+        return Vector3.Dot(offset, axis);
     }
 
     public Vector3 axis

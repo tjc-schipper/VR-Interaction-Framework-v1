@@ -6,6 +6,9 @@ public abstract class MovementModifier : MonoBehaviour {
 
     List<GameObject> subscribedGameObjects;
 
+    //bool oldWasKinematic;
+    //bool oldUseGravity;
+
     void Start()
     {
         subscribedGameObjects = new List<GameObject>();

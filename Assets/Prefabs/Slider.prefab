@@ -202,8 +202,10 @@ MonoBehaviour:
   allowMultipleGrabs: 1
   isTool: 0
   useWeight: 0
-  maxDisplacement: 0
+  maxDisplacement: 0.19
   sliderBase: {fileID: 184988}
+  debug_displacement: {fileID: 0}
+  debug_max: {fileID: 0}
 --- !u!136 &13613646
 CapsuleCollider:
   m_ObjectHideFlags: 1
