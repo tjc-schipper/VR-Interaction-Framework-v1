@@ -72,6 +72,7 @@ public class Grabber : MonoBehaviour
     void OnTriggerEnter(Collider collider)
     {
         GrabZone gz = collider.GetComponent<GrabZone>();
+
         if (gz != null)
         {
             intersecting.Add(gz);
